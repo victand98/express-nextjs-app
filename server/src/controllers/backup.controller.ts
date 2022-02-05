@@ -1,3 +1,4 @@
+import path from "path";
 import { Request, Response } from "express";
 import { NotFoundError } from "../helpers/errors/not-found.error";
 import { CustomRequest } from "../helpers/types";
@@ -14,11 +15,13 @@ export const one = async (req: Request, res: Response) => {
 
   if (!backup) throw new NotFoundError();
 
-  res.json(backup);
+  const backupFile = path.join(__dirname, "..", "public", backup.path);
+
+  res.download(backupFile);
 };
 
 export const save = async (req: CustomRequest<BackupAttrs>, res: Response) => {
-  const backup = Backup.build(req.body);
+  const backup = Backup.build({ path: req.file?.filename! });
   await backup.save();
 
   res.status(201).json(backup);

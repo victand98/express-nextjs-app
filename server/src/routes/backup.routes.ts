@@ -1,4 +1,5 @@
 import express from "express";
+import { upload } from "../config/multer";
 import { backupController } from "../controllers";
 import { Resources } from "../helpers/types";
 import { use } from "../helpers/utils";
@@ -23,6 +24,7 @@ backupRouter.post(
   "/",
   requireAuth,
   authorization(Resources.backup),
+  upload.single("backupFile"),
   use(backupController.save)
 );
 backupRouter.put(

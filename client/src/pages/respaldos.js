@@ -74,14 +74,7 @@ const Backups = ({ backups }) => {
           </Thead>
           <Tbody>
             {data.map((row) => {
-              return (
-                <TableBackupsRow
-                  {...row}
-                  key={row.id}
-                  mutate={mutate}
-                  users={users}
-                />
-              );
+              return <TableBackupsRow {...row} key={row.id} />;
             })}
           </Tbody>
         </Table>

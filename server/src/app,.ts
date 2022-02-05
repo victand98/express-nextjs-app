@@ -1,6 +1,7 @@
 import express from "express";
 import "express-async-errors";
 import morgan from "morgan";
+import path from "path";
 import cors from "cors";
 import cookieSession from "cookie-session";
 import routes from "./routes";
@@ -28,6 +29,7 @@ app.use(
     secure: process.env.NODE_ENV !== "development",
   })
 );
+app.use("/static", express.static(path.join(__dirname, "public")));
 
 // verify if exists a current user
 app.use(currentUser);

@@ -1,27 +1,33 @@
+import React from "react";
 import {
   Button,
   Flex,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
   Td,
   Text,
   Tr,
   useColorModeValue,
-  useDisclosure,
 } from "@chakra-ui/react";
-import React from "react";
-import { UpdateBackupForm, WithPermissions } from "..";
+import fileDownload from "js-file-download";
+import { WithPermissions } from "..";
 import { Actions, Resources } from "../../lib/helpers/constants";
 import { formatDate } from "../../lib/helpers/utils";
+import { BackupService } from "../../lib/services";
+import { toast } from "react-toastify";
 
 export const TableBackupsRow = (props) => {
-  const { path, createdAt, updatedAt, mutate } = props;
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { id, path, createdAt, updatedAt } = props;
   const textColor = useColorModeValue("gray.700", "white");
+
+  const getBackup = async () => {
+    try {
+      const { data } = await BackupService.one(id);
+      fileDownload(data, path);
+    } catch (error) {
+      for (const err of error.errors) {
+        toast.error(err.message);
+      }
+    }
+  };
 
   return (
     <Tr>
@@ -32,7 +38,7 @@ export const TableBackupsRow = (props) => {
               Archivo
             </Text>
             <Text
-              fontSize="md"
+              fontSize="sm"
               color={textColor}
               fontWeight="bold"
               minWidth="100%"
@@ -60,32 +66,21 @@ export const TableBackupsRow = (props) => {
 
       <Td>
         <WithPermissions action={Actions.read} resource={Resources.backup}>
-          <Button p="0px" bg="transparent" variant="no-hover" onClick={onOpen}>
+          <Button
+            p="0px"
+            bg="transparent"
+            variant="no-hover"
+            onClick={getBackup}
+          >
             <Text
               fontSize="md"
               color="gray.400"
               fontWeight="bold"
               cursor="pointer"
             >
-              Ver
+              Descargar
             </Text>
           </Button>
-          {/* 
-          <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>Editar Equipo</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody pb={6}>
-                <UpdateBackupForm
-                  equipment={props}
-                  users={users}
-                  onClose={onClose}
-                  mutate={mutate}
-                />
-              </ModalBody>
-            </ModalContent>
-          </Modal> */}
         </WithPermissions>
       </Td>
     </Tr>
