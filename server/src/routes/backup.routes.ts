@@ -33,5 +33,11 @@ backupRouter.put(
   authorization(Resources.backup),
   use(backupController.update)
 );
+backupRouter.post(
+  "/generate",
+  requireAuth,
+  authorization(Resources.backup),
+  use(backupController.generate)
+);
 
 export { backupRouter };

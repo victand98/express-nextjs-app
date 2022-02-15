@@ -15,6 +15,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Stack,
   Table,
   Tbody,
   Th,
@@ -23,14 +24,28 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { HiOutlineDocumentAdd } from "react-icons/hi";
+import { HiDownload, HiOutlineDocumentAdd } from "react-icons/hi";
 import { useBackups } from "../lib/api/backups";
 import { Actions, Resources } from "../lib/helpers/constants";
+import { BackupService } from "../lib/services";
+import { toast } from "react-toastify";
 
 const Backups = ({ backups }) => {
   const textColor = useColorModeValue("gray.700", "white");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data, mutate } = useBackups(backups);
+
+  const generateBackup = async () => {
+    try {
+      const { data } = await BackupService.generate();
+      console.log("[DATA]", data);
+      toast.success("Respaldo generado con éxito");
+    } catch (error) {
+      for (const err of error.errors) {
+        toast.error(err.message);
+      }
+    }
+  };
 
   return (
     <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
@@ -38,14 +53,24 @@ const Backups = ({ backups }) => {
         title="Lista de Respaldos"
         action={
           <WithPermissions action={Actions.create} resource={Resources.backup}>
-            <Button
-              variant="outline"
-              minW="20"
-              leftIcon={<HiOutlineDocumentAdd />}
-              onClick={onOpen}
-            >
-              Nuevo
-            </Button>
+            <Stack spacing={2} direction="row" align="center">
+              <Button
+                variant="outline"
+                minW="20"
+                leftIcon={<HiDownload />}
+                onClick={generateBackup}
+              >
+                Generar
+              </Button>
+              <Button
+                variant="outline"
+                minW="20"
+                leftIcon={<HiOutlineDocumentAdd />}
+                onClick={onOpen}
+              >
+                Nuevo
+              </Button>
+            </Stack>
           </WithPermissions>
         }
       />
