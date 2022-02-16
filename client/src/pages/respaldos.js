@@ -38,8 +38,7 @@ const Backups = ({ backups }) => {
   const generateBackup = async () => {
     try {
       const { data } = await BackupService.generate();
-      console.log("[DATA]", data);
-      toast.success("Respaldo generado con éxito");
+      toast.success(data.message);
     } catch (error) {
       for (const err of error.errors) {
         toast.error(err.message);

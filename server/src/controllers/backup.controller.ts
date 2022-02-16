@@ -48,20 +48,12 @@ export const generate = async (
 ) => {
   const params = {
     host: "192.168.20.80",
-    port: 80,
-    username: "zte",
-    password: "zte",
+    port: 23,
+    shellPrompt: "",
+    loginPrompt: /Username[: ]*$/i,
+    passwordPrompt: /Password: /i,
   };
-
   await connection.connect(params);
 
-  console.log("Connected by telnet...");
-
-  const result = await connection.exec(
-    "file upload cfg-startup startrun.sav ftp ip 192.168.108.11 user ftpserver password ftpserver"
-  );
-
-  connection.end();
-
-  res.json(result);
+  res.json({ message: "Backup generado con éxito" });
 };
