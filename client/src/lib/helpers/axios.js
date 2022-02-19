@@ -16,12 +16,18 @@ const errorHandler = async (error) => {
     return Promise.reject(data);
   } else if (error.request) {
     return Promise.reject({
-      message:
-        "No se ha podido establecer comunicación con el servidor, por favor, vuelva a intentarlo.",
+      errors: [
+        {
+          message:
+            "No se ha podido establecer comunicación con el servidor, por favor, vuelva a intentarlo.",
+        },
+      ],
     });
   }
 
-  return Promise.reject(error);
+  return Promise.reject({
+    errors: [{ message: "Ha ocurrido un error inesperado" }],
+  });
 };
 
 instance.interceptors.response.use(

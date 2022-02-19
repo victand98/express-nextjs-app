@@ -15,12 +15,16 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
+import { toast } from "react-toastify";
 import { UpdateUserForm, WithPermissions } from "..";
+import { useAuthContext } from "../../context/AuthContext";
 import { Actions, Resources } from "../../lib/helpers/constants";
 import { formatDate } from "../../lib/helpers/utils";
+import { UserService } from "../../lib/services";
 
 export const TableUsersRow = (props) => {
   const {
+    id,
     createdAt,
     dni,
     email,
@@ -32,10 +36,23 @@ export const TableUsersRow = (props) => {
     mutate,
     roles,
   } = props;
+  const { currentUser } = useAuthContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const textColor = useColorModeValue("gray.700", "white");
   const bgStatus = useColorModeValue("gray.400", "#1a202c");
   const colorStatus = useColorModeValue("white", "gray.400");
+
+  const removeUser = async () => {
+    try {
+      const { data } = await UserService.remove(id);
+      toast.success("Eliminado con éxito");
+      mutate();
+    } catch (error) {
+      for (const err of error.errors) {
+        toast.error(err.message);
+      }
+    }
+  };
 
   return (
     <Tr>
@@ -96,34 +113,66 @@ export const TableUsersRow = (props) => {
       </Td>
 
       <Td>
-        <WithPermissions action={Actions.update} resource={Resources.users}>
-          <Button p="0px" bg="transparent" variant="no-hover" onClick={onOpen}>
-            <Text
-              fontSize="md"
-              color="gray.400"
-              fontWeight="bold"
-              cursor="pointer"
-            >
-              Editar
-            </Text>
-          </Button>
+        <Flex align="center" py=".8rem" minWidth="100%" flexWrap="nowrap">
+          <Flex direction="column">
+            <WithPermissions action={Actions.delete} resource={Resources.users}>
+              <Button
+                p="0px"
+                bg="transparent"
+                variant="no-hover"
+                onClick={removeUser}
+                disabled={id === currentUser.id}
+              >
+                <Text
+                  fontSize="md"
+                  color="red.400"
+                  fontWeight="bold"
+                  cursor="pointer"
+                >
+                  Eliminar
+                </Text>
+              </Button>
+            </WithPermissions>
 
-          <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>Editar Usuario</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody pb={6}>
-                <UpdateUserForm
-                  user={props}
-                  roles={roles}
-                  onClose={onClose}
-                  mutate={mutate}
-                />
-              </ModalBody>
-            </ModalContent>
-          </Modal>
-        </WithPermissions>
+            <WithPermissions action={Actions.update} resource={Resources.users}>
+              <Button
+                p="0px"
+                bg="transparent"
+                variant="no-hover"
+                onClick={onOpen}
+              >
+                <Text
+                  fontSize="md"
+                  color="gray.400"
+                  fontWeight="bold"
+                  cursor="pointer"
+                >
+                  Editar
+                </Text>
+              </Button>
+
+              <Modal
+                closeOnOverlayClick={false}
+                isOpen={isOpen}
+                onClose={onClose}
+              >
+                <ModalOverlay />
+                <ModalContent>
+                  <ModalHeader>Editar Usuario</ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody pb={6}>
+                    <UpdateUserForm
+                      user={props}
+                      roles={roles}
+                      onClose={onClose}
+                      mutate={mutate}
+                    />
+                  </ModalBody>
+                </ModalContent>
+              </Modal>
+            </WithPermissions>
+          </Flex>
+        </Flex>
       </Td>
     </Tr>
   );

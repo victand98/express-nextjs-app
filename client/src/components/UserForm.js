@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Input, Select, Switch } from ".";
 import { UserService } from "../lib/services";
+import { useAuthContext } from "../context/AuthContext";
 
 export const NewUserForm = ({ roles, onClose, mutate }) => {
   const rolesOptions = roles.map((role) => ({
@@ -133,6 +134,7 @@ export const NewUserForm = ({ roles, onClose, mutate }) => {
 };
 
 export const UpdateUserForm = ({ user, roles, onClose, mutate }) => {
+  const { currentUser } = useAuthContext();
   const { dni, email, firstName, id, lastName, role, status } = user;
 
   const rolesOptions = roles.map((role) => ({
@@ -251,6 +253,7 @@ export const UpdateUserForm = ({ user, roles, onClose, mutate }) => {
           errors={errors}
           register={register}
           options={rolesOptions}
+          isDisabled={currentUser.id === id}
           rules={{
             required: "El campo es requerido",
           }}

@@ -31,5 +31,11 @@ userRouter.put(
   authorization(Resources.users),
   use(userController.update)
 );
+userRouter.delete(
+  "/:id",
+  requireAuth,
+  authorization(Resources.users),
+  use(userController.remove)
+);
 
 export { userRouter };

@@ -2,12 +2,12 @@ import { Resource, Role, User } from "../models";
 import { Roles } from "../helpers/types";
 import { Password } from "../helpers/Password";
 import { defaultResources } from "../helpers/constants";
+import { initialRoles } from "./data";
 
 const insertRoles = async () => {
-  const roles = Object.values(Roles);
   console.log("Inserting Roles...");
-  const rolesToInsert = roles.map((role) =>
-    Role.findOneAndUpdate({ name: role }, { name: role }, { upsert: true })
+  const rolesToInsert = initialRoles.map((role) =>
+    Role.findOneAndUpdate({ name: role.name }, role, { upsert: true })
   );
   await Promise.all(rolesToInsert);
   console.log("Roles inserted");

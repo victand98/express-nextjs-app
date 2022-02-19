@@ -4,6 +4,7 @@ import { Roles } from "../helpers/types";
 interface RoleAttrs {
   name: Roles;
   status: boolean;
+  privilege: number;
 }
 
 interface RoleModel extends mongoose.Model<RoleDoc> {
@@ -13,6 +14,7 @@ interface RoleModel extends mongoose.Model<RoleDoc> {
 interface RoleDoc extends mongoose.Document {
   name: Roles;
   status: boolean;
+  privilege: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -23,6 +25,10 @@ const RoleSchema = new mongoose.Schema(
     status: {
       type: Boolean,
       default: true,
+    },
+    privilege: {
+      type: Number,
+      required: true,
     },
   },
   {
@@ -40,4 +46,4 @@ RoleSchema.statics.build = (attrs: RoleAttrs) => new Role(attrs);
 
 const Role = mongoose.model<RoleDoc, RoleModel>("Role", RoleSchema);
 
-export { Role, RoleDoc };
+export { Role, RoleDoc, RoleAttrs };

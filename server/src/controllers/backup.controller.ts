@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { NotFoundError } from "../helpers/errors/not-found.error";
 import { CustomRequest } from "../helpers/types";
 import { Backup, BackupAttrs } from "../models";
-import { connection } from "../config/telnet";
+import { telnetWrapper } from "../config/telnet";
 
 export const all = async (req: Request, res: Response) => {
   const backups = await Backup.find({});
@@ -46,14 +46,10 @@ export const generate = async (
   req: CustomRequest<BackupAttrs>,
   res: Response
 ) => {
-  const params = {
-    host: "192.168.20.80",
-    port: 23,
-    shellPrompt: "",
-    loginPrompt: /Username[: ]*$/i,
-    passwordPrompt: /Password: /i,
-  };
-  await connection.connect(params);
-
+  await telnetWrapper.connect();
+  await telnetWrapper.connection.write("write\r\n");
+  await telnetWrapper.connection.write(
+    "file upload cfg-startup startrun.sav ftp ip 192.168.108.12 user ftpserver password ftpserver\r\n"
+  );
   res.json({ message: "Backup generado con éxito" });
 };
