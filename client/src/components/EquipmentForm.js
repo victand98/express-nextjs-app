@@ -88,7 +88,7 @@ export const NewEquipmentForm = ({ users, onClose, mutate }) => {
         <Input
           type="text"
           name="vlan"
-          placeholder="192.168.1.1"
+          placeholder=".1.1"
           label="VLAN"
           errors={errors}
           register={register}
@@ -101,7 +101,7 @@ export const NewEquipmentForm = ({ users, onClose, mutate }) => {
         <Input
           type="text"
           name="ip"
-          placeholder="192.168.1.1"
+          placeholder=".1.1"
           label="IP"
           errors={errors}
           register={register}
@@ -240,7 +240,7 @@ export const UpdateEquipmentForm = ({ equipment, users, onClose, mutate }) => {
         <Input
           type="text"
           name="vlan"
-          placeholder="192.168.1.1"
+          placeholder=".1.1"
           label="VLAN"
           defaultValue={vlan}
           errors={errors}
@@ -253,7 +253,7 @@ export const UpdateEquipmentForm = ({ equipment, users, onClose, mutate }) => {
         <Input
           type="text"
           name="ip"
-          placeholder="192.168.1.1"
+          placeholder=".1.1"
           label="IP"
           defaultValue={ip}
           errors={errors}

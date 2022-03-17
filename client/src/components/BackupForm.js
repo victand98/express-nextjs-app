@@ -3,9 +3,9 @@ import { Stack, Button } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Input } from ".";
-import { BackupService } from "../lib/services";
+import { Service } from "../lib/services";
 
-export const NewBackupForm = ({ onClose, mutate }) => {
+export const NewForm = ({ onClose, mutate }) => {
   const {
     handleSubmit,
     register,
@@ -14,10 +14,10 @@ export const NewBackupForm = ({ onClose, mutate }) => {
 
   const onSubmit = async (values) => {
     const formData = new FormData();
-    formData.append("backupFile", values.backupFile[0]);
+    formData.append("File", values.File[0]);
 
     try {
-      const { data } = await BackupService.save(formData);
+      const { data } = await Service.save(formData);
       toast.success("Guardado con éxito");
       onClose();
       mutate();
@@ -33,7 +33,7 @@ export const NewBackupForm = ({ onClose, mutate }) => {
       <Stack spacing={4}>
         <Input
           type="file"
-          name="backupFile"
+          name="File"
           label="Archivo de respaldo"
           errors={errors}
           register={register}
