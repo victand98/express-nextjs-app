@@ -36,6 +36,7 @@ export const LoginForm = () => {
         <Input
           type="email"
           name="email"
+          bg={"blue.10"}
           placeholder="usuario@correo.com"
           label="Correo Electrónico"
           errors={errors}
@@ -53,6 +54,7 @@ export const LoginForm = () => {
         <Input
           type="password"
           name="password"
+          bg={"blue.10"}
           placeholder="***************"
           label="Contraseña"
           errors={errors}

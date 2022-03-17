@@ -8,6 +8,7 @@ import routes from "./routes";
 import { ErrorHandler } from "./middlewares/error-handler";
 import { currentUser } from "./middlewares/current-user";
 import { NotFoundError } from "./helpers/errors/not-found.error";
+import log from "./helpers/logger";
 
 const app = express();
 
@@ -15,11 +16,15 @@ app.set("trust proxy", true);
 app.set("port", process.env.PORT || 3000);
 
 // middlewares
-app.use(morgan("dev"));
+app.use(
+  morgan("dev", {
+    stream: { write: (message: string) => log.info(message) },
+  })
+);
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "http://192.168.0.2:3000"],
     credentials: true,
   })
 );

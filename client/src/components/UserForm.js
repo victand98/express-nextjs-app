@@ -44,6 +44,10 @@ export const NewUserForm = ({ roles, onClose, mutate }) => {
           rules={{
             required: "El campo es requerido",
             minLength: { value: 3, message: "Escriba al menos 3 caracteres" },
+            maxLength: {
+              value: 16,
+              message: "Escriba no más de 16 caracteres",
+            },
           }}
         />
 
@@ -180,9 +184,14 @@ export const UpdateUserForm = ({ user, roles, onClose, mutate }) => {
           label="Nombre"
           errors={errors}
           register={register}
+          readOnly
           rules={{
             required: "El campo es requerido",
             minLength: { value: 3, message: "Escriba al menos 3 caracteres" },
+            maxLength: {
+              value: 16,
+              message: "Escriba no más de 16 caracteres",
+            },
           }}
         />
 

@@ -7,12 +7,7 @@ import { requireAuth } from "../middlewares/require-auth";
 
 const userRouter = express.Router();
 
-userRouter.get(
-  "/",
-  requireAuth,
-  authorization(Resources.users),
-  use(userController.all)
-);
+userRouter.get("/", requireAuth, use(userController.all));
 userRouter.get(
   "/:id",
   requireAuth,

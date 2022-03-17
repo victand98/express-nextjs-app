@@ -13,14 +13,14 @@ import { LoginForm } from "../components";
 const Login = () => {
   return (
     <Stack align={"center"}>
-      <Heading fontSize={"4xl"}>Ingreso al sistema</Heading>
+      <Heading fontSize={"4xl"}>Administracion OLT ZTE</Heading>
       <Text fontSize={"lg"} color={"gray.600"}>
         Ingresa tus credenciales
       </Text>
 
       <Box
         rounded={"lg"}
-        bg={useColorModeValue("white", "gray.700")}
+        bg={useColorModeValue("gray.200")}
         boxShadow={"lg"}
         p={8}
       >

@@ -33,7 +33,7 @@ export const SidebarContent = ({ onClose, items, ...rest }) => {
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          OltApp
+          Menú
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
@@ -125,12 +125,12 @@ export const MobileNav = ({ onOpen, ...rest }) => {
       </Text>
 
       <HStack spacing={{ base: "0", md: "6" }}>
-        <IconButton
+        {/* <IconButton
           size="lg"
           variant="ghost"
           aria-label="open menu"
           icon={<FiBell />}
-        />
+        /> */}
         <Flex alignItems={"center"}>
           <Menu>
             <MenuButton
@@ -139,7 +139,7 @@ export const MobileNav = ({ onOpen, ...rest }) => {
               _focus={{ boxShadow: "none" }}
             >
               <HStack>
-                <Avatar size={"sm"} src={"https://picsum.photos/200/300"} />
+                <Avatar size={"sm"} src={"/img/ups.png"} />
                 <VStack
                   display={{ base: "none", md: "flex" }}
                   alignItems="flex-start"
@@ -160,9 +160,6 @@ export const MobileNav = ({ onOpen, ...rest }) => {
               bg={useColorModeValue("white", "gray.900")}
               borderColor={useColorModeValue("gray.200", "gray.700")}
             >
-              <MenuItem>Perfil</MenuItem>
-              <MenuItem>Configuración</MenuItem>
-              <MenuItem>Pagos</MenuItem>
               <MenuDivider />
               <Link href="/salir">
                 <MenuItem>Salir</MenuItem>

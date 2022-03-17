@@ -1,13 +1,22 @@
 import { Request, Response } from "express";
-import mongoose, { ObjectId } from "mongoose";
+import { FilterQuery } from "mongoose";
 import { telnetWrapper } from "../config/telnet";
 import { BadRequestError } from "../helpers/errors/bad-request-error";
 import { NotFoundError } from "../helpers/errors/not-found.error";
 import { CustomRequest, Roles } from "../helpers/types";
-import { Role, User, UserAttrs } from "../models";
+import { Role, User, UserAttrs, UserDoc } from "../models";
 
 export const all = async (req: Request, res: Response) => {
-  const users = await User.find({}).populate("role");
+  const teacherRole = await Role.findOne({ name: Roles.teacher });
+  let filter: FilterQuery<UserDoc> = {};
+  if (req.currentUser?.role === teacherRole?.id) {
+    const studentRole = await Role.findOne({ name: Roles.student });
+    filter = {
+      role: studentRole?.id,
+    };
+  }
+
+  const users = await User.find(filter).populate("role");
 
   res.json(users);
 };
@@ -21,24 +30,24 @@ export const one = async (req: Request, res: Response) => {
 };
 
 export const save = async (req: Request, res: Response) => {
-  const roles = await Role.find({
-    $or: [{ name: Roles.administrator }, { name: Roles.teacher }],
-  });
+  const roles = await Role.find({});
 
   if (roles.map((role) => role.id).includes(req.body.role)) {
     const totalUsers = await User.countDocuments({ role: { $in: roles } });
-    const maxTotalUsers = 15;
+    const maxTotalUsers = 20;
     if (totalUsers > maxTotalUsers)
       throw new BadRequestError(
-        `Solamente se puede registar hasta ${maxTotalUsers} usuarios con roles: ${Roles.administrator}, ${Roles.teacher}`
+        `Solamente se puede registar hasta ${maxTotalUsers} usuarios`
       );
     await telnetWrapper.connect();
-    await telnetWrapper.connection.write(`configure terminal\r\n`);
-    await telnetWrapper.connection.write(`service password-encryption\r\n`);
+    await telnetWrapper.login();
+    await telnetWrapper.write(`configure terminal\r\n`);
+    await telnetWrapper.write(`service password-encryption\r\n`);
     const userRole = roles.find((role) => role.id === req.body.role);
-    await telnetWrapper.connection.write(
-      `username ${req.body.email} password ${req.body.password} privilege ${userRole?.privilege}\r\n`
+    await telnetWrapper.write(
+      `username ${req.body.firstName} password ${req.body.password} privilege ${userRole?.privilege}\r\n`
     );
+    await telnetWrapper.closeConnection();
   }
 
   const user = User.build(req.body);
@@ -53,23 +62,23 @@ export const update = async (req: CustomRequest<UserAttrs>, res: Response) => {
   if (!user) throw new NotFoundError();
 
   if (req.body.role !== user.role) {
-    const roles = await Role.find({
-      $or: [{ name: Roles.administrator }, { name: Roles.teacher }],
-    });
+    const roles = await Role.find({});
     if (roles.map((role) => role.id).includes(req.body.role)) {
       const totalUsers = await User.countDocuments({ role: { $in: roles } });
-      const maxTotalUsers = 15;
+      const maxTotalUsers = 20;
       if (totalUsers > maxTotalUsers)
         throw new BadRequestError(
-          `Solamente se puede registar hasta ${maxTotalUsers} usuarios con roles: ${Roles.administrator}, ${Roles.teacher}`
+          `Solamente se puede registar hasta ${maxTotalUsers} usuarios`
         );
       await telnetWrapper.connect();
-      await telnetWrapper.connection.write(`configure terminal\r\n`);
-      await telnetWrapper.connection.write(`service password-encryption\r\n`);
+      await telnetWrapper.login();
+      await telnetWrapper.write(`configure terminal\r\n`);
+      await telnetWrapper.write(`service password-encryption\r\n`);
       const userRole = roles.find((role) => role.id === req.body.role);
-      await telnetWrapper.connection.write(
-        `username ${req.body.email} password ${req.body.password} privilege ${userRole?.privilege}\r\n`
+      await telnetWrapper.write(
+        `username ${req.body.firstName} password ${req.body.password} privilege ${userRole?.privilege}\r\n`
       );
+      await telnetWrapper.closeConnection();
     }
   }
 
@@ -84,14 +93,14 @@ export const remove = async (req: CustomRequest<UserAttrs>, res: Response) => {
 
   if (!user) throw new NotFoundError();
 
-  const roles = await Role.find({
-    $or: [{ name: Roles.administrator }, { name: Roles.teacher }],
-  }).distinct("_id");
+  const roles = await Role.find({}).distinct("_id");
 
   if (roles.map(String).includes(String(user.role))) {
     await telnetWrapper.connect();
-    await telnetWrapper.connection.write(`configure terminal\r\n`);
-    await telnetWrapper.connection.write(`no username ${user.email}\r\n`);
+    await telnetWrapper.login();
+    await telnetWrapper.write(`configure terminal\r\n`);
+    await telnetWrapper.write(`no username ${user.firstName}\r\n`);
+    await telnetWrapper.closeConnection();
   }
 
   await user.remove();

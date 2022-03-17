@@ -18,4 +18,7 @@ const hasPermission = (userPermissions = [], action, resource) => {
 
 export const canRenderItem = (userPermissions = [], resource) =>
   !resource ||
-  userPermissions.some((userPermission) => userPermission.name === resource);
+  userPermissions.some(
+    (userPermission) =>
+      userPermission.name === resource && userPermission.roles[0].read
+  );

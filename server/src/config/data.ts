@@ -4,7 +4,7 @@ import { RoleAttrs } from "../models";
 export const initialRoles: RoleAttrs[] = [
   {
     name: Roles.administrator,
-    privilege: 4,
+    privilege: 15,
     status: true,
   },
   {
@@ -14,12 +14,12 @@ export const initialRoles: RoleAttrs[] = [
   },
   {
     name: Roles.student,
-    privilege: 15,
+    privilege: 5,
     status: true,
   },
   {
-    name: Roles.administrator,
-    privilege: 20,
+    name: Roles.guest,
+    privilege: 4,
     status: true,
   },
 ];

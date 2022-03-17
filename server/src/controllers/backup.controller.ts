@@ -47,9 +47,13 @@ export const generate = async (
   res: Response
 ) => {
   await telnetWrapper.connect();
-  await telnetWrapper.connection.write("write\r\n");
-  await telnetWrapper.connection.write(
-    "file upload cfg-startup startrun.sav ftp ip 192.168.108.12 user ftpserver password ftpserver\r\n"
+  await telnetWrapper.login();
+  await telnetWrapper.write("write\r\n", { waitFor: /ok/i });
+
+  await telnetWrapper.write(
+    "file upload cfg-startup startrun.sav ftp ip 192.168.108.12 user ftpserver password ftpserver\r\n",
+    { waitFor: /successfully/i }
   );
+  await telnetWrapper.closeConnection();
   res.json({ message: "Backup generado con éxito" });
 };
