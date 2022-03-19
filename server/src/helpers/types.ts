@@ -11,6 +11,7 @@ export enum Resources {
   users = "usuarios",
   equipment = "equipos",
   backup = "respaldo",
+  nap = "nap",
 }
 
 export interface CustomRequest<T> extends Request {

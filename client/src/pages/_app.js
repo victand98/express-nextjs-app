@@ -4,27 +4,33 @@ import "../styles/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import buildClient from "../lib/api/buildClient";
 import { AuthContextProvider } from "../context/AuthContext";
+import Head from "next/head";
 
 function MyApp({ Component, pageProps, currentUser }) {
   const getLayout = Component.getLayout || ((page) => page);
 
   return (
-    <AuthContextProvider currentUser={currentUser}>
-      <ChakraProvider>
-        {getLayout(<Component currentUser={currentUser} {...pageProps} />)}
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
-      </ChakraProvider>
-    </AuthContextProvider>
+    <>
+      <Head>
+        <title>OLT ZTE</title>
+      </Head>
+      <AuthContextProvider currentUser={currentUser}>
+        <ChakraProvider>
+          {getLayout(<Component currentUser={currentUser} {...pageProps} />)}
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
+        </ChakraProvider>
+      </AuthContextProvider>
+    </>
   );
 }
 

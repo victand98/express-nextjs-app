@@ -1,13 +1,4 @@
 import {
-  Card,
-  CardBody,
-  CardHeader,
-  NewEquipmentForm,
-  TableEquipmentsRow,
-  WithPermissions,
-} from "../components";
-import { DashboardLayout } from "../layouts";
-import {
   Button,
   Modal,
   ModalBody,
@@ -15,6 +6,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Stack,
   Table,
   Tbody,
   Th,
@@ -24,32 +16,56 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { HiOutlineDocumentAdd } from "react-icons/hi";
-import { useEquipments } from "../lib/api/equipments";
-import { Actions, Resources } from "../lib/helpers/constants";
+import { MdOutlineArrowBack } from "react-icons/md";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Link,
+  NewEquipmentForm,
+  TableEquipmentsRow,
+  WithPermissions,
+} from "../../components";
+import { DashboardLayout } from "../../layouts";
+import { useNap } from "../../lib/api/naps";
+import { Actions, Resources } from "../../lib/helpers/constants";
 
-const Equipments = ({ equipments, users }) => {
+const Equipments = ({ napData, users }) => {
   const textColor = useColorModeValue("gray.700", "white");
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { data, mutate } = useEquipments(equipments);
+  const { data, mutate } = useNap(napData.nap.id, napData);
 
   return (
     <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
       <CardHeader
         title="Lista de Equipos"
+        subtitle={napData.nap.name}
         action={
-          <WithPermissions
-            action={Actions.create}
-            resource={Resources.equipment}
-          >
-            <Button
-              variant="outline"
-              minW="20"
-              leftIcon={<HiOutlineDocumentAdd />}
-              onClick={onOpen}
+          <Stack spacing={2} direction="row" align="center">
+            <Link href="/naps">
+              <Button
+                variant="link"
+                minW="20"
+                leftIcon={<MdOutlineArrowBack />}
+              >
+                Regresar
+              </Button>
+            </Link>
+
+            <WithPermissions
+              action={Actions.create}
+              resource={Resources.equipment}
             >
-              Nuevo
-            </Button>
-          </WithPermissions>
+              <Button
+                variant="outline"
+                minW="20"
+                leftIcon={<HiOutlineDocumentAdd />}
+                onClick={onOpen}
+              >
+                Nuevo
+              </Button>
+            </WithPermissions>
+          </Stack>
         }
       />
 
@@ -59,7 +75,12 @@ const Equipments = ({ equipments, users }) => {
           <ModalHeader>Nuevo Equipo</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-            <NewEquipmentForm users={users} onClose={onClose} mutate={mutate} />
+            <NewEquipmentForm
+              users={users}
+              onClose={onClose}
+              mutate={mutate}
+              nap={data.nap}
+            />
           </ModalBody>
         </ModalContent>
       </Modal>
@@ -71,6 +92,7 @@ const Equipments = ({ equipments, users }) => {
               <Th pl="0px" color="gray.400">
                 Equipo
               </Th>
+              <Th color="gray.400">Estado</Th>
               <Th color="gray.400">Ubicación</Th>
               <Th color="gray.400">Usuario</Th>
               <Th color="gray.400">Historial</Th>
@@ -78,7 +100,7 @@ const Equipments = ({ equipments, users }) => {
             </Tr>
           </Thead>
           <Tbody>
-            {data.map((row) => {
+            {data.equipments.map((row) => {
               return (
                 <TableEquipmentsRow
                   {...row}
@@ -98,12 +120,17 @@ const Equipments = ({ equipments, users }) => {
 Equipments.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 Equipments.getInitialProps = async (context, client) => {
-  const [users, equipments] = await Promise.all([
+  const { id } = context.query;
+
+  const [nap, users] = await Promise.all([
+    client.get(`/nap/${id}`),
     client.get(`/user/`),
-    client.get(`/equipment/`),
   ]);
 
-  return { users: users.data, equipments: equipments.data };
+  return {
+    napData: nap.data,
+    users: users.data,
+  };
 };
 
 export default Equipments;

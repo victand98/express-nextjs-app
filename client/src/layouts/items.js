@@ -16,10 +16,10 @@ export const dashboardItems = [
     resource: Resources.users,
   },
   {
-    name: "Equipos",
-    path: "/equipos",
+    name: "NAP's",
+    path: "/naps",
     icon: HiDesktopComputer,
-    resource: Resources.equipment,
+    resource: Resources.nap,
   },
   {
     name: "Respaldos",

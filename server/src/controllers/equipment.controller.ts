@@ -40,3 +40,16 @@ export const update = async (
 
   res.json(equipment);
 };
+
+export const remove = async (req: Request, res: Response) => {
+  const equipment = await Equipment.findById(req.params.id);
+
+  if (!equipment) throw new NotFoundError();
+
+  equipment.set({
+    status: false,
+  });
+  await equipment.save();
+
+  res.status(202).json();
+};

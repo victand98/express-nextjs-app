@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { NapDoc } from "./Nap.model";
 import { UserDoc } from "./User.model";
 
 interface EquipmentAttrs {
@@ -10,6 +11,8 @@ interface EquipmentAttrs {
   ip: string;
   location: string;
   user?: UserDoc;
+  nap?: NapDoc;
+  status: boolean;
 }
 
 interface EquipmentModel extends mongoose.Model<EquipmentDoc> {
@@ -25,6 +28,8 @@ interface EquipmentDoc extends mongoose.Document {
   ip: string;
   location: string;
   user: UserDoc;
+  nap: NapDoc;
+  status: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -41,6 +46,14 @@ const EquipmentSchema = new mongoose.Schema(
     user: {
       type: mongoose.Types.ObjectId,
       ref: "User",
+    },
+    nap: {
+      type: mongoose.Types.ObjectId,
+      ref: "Nap",
+    },
+    status: {
+      type: Boolean,
+      default: true,
     },
   },
   {

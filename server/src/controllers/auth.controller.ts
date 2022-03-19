@@ -6,9 +6,11 @@ import { BadRequestError } from "../helpers/errors/bad-request-error";
 import { Roles } from "../helpers/types";
 
 export const signin = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { password, username } = req.body;
 
-  const user = await User.findOne({ email }).populate("role");
+  const user = await User.findOne({
+    $or: [{ email: username }, { username }],
+  }).populate("role");
 
   if (!user) throw new BadRequestError("Las credenciales no son válidas");
 

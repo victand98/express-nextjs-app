@@ -1,8 +1,8 @@
-import { Resource, Role, User } from "../models";
+import { Nap, Resource, Role, User } from "../models";
 import { Roles } from "../helpers/types";
 import { Password } from "../helpers/Password";
 import { defaultResources } from "../helpers/constants";
-import { initialRoles } from "./data";
+import { initialNaps, initialRoles } from "./data";
 
 const insertRoles = async () => {
   console.log("Inserting Roles...");
@@ -19,6 +19,7 @@ const insertAdmin = async () => {
     firstName: "Super",
     lastName: "Administrador",
     dni: "0000000000",
+    username: process.env.ADMIN_USERNAME,
     email: process.env.ADMIN_EMAIL,
     password: await Password.toHash(process.env.ADMIN_PASSWORD!),
     role: adminRole?.id,
@@ -28,6 +29,15 @@ const insertAdmin = async () => {
     upsert: true,
   });
   console.log("Admin inserted");
+};
+
+const insertNaps = async () => {
+  console.log("Inserting NAPs...");
+  const napsToInsert = initialNaps.map((nap) =>
+    Nap.findOneAndUpdate({ name: nap.name }, nap, { upsert: true })
+  );
+  await Promise.all(napsToInsert);
+  console.log("Naps inserted");
 };
 
 const insertResources = async () => {
@@ -60,6 +70,7 @@ const seeders = async () => {
     await insertRoles();
     await insertAdmin();
     await insertResources();
+    await insertNaps();
   } catch (error) {
     console.error(`An error occurred while saving the data: ${error}`);
   }

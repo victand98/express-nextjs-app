@@ -15,7 +15,6 @@ export const all = async (req: Request, res: Response) => {
       role: studentRole?.id,
     };
   }
-
   const users = await User.find(filter).populate("role");
 
   res.json(users);
@@ -23,13 +22,13 @@ export const all = async (req: Request, res: Response) => {
 
 export const one = async (req: Request, res: Response) => {
   const user = await User.findById(req.params.id).populate("role");
-
   if (!user) throw new NotFoundError();
 
   res.json(user);
 };
 
 export const save = async (req: Request, res: Response) => {
+  const user = User.build(req.body);
   const roles = await Role.find({});
 
   if (roles.map((role) => role.id).includes(req.body.role)) {
@@ -45,15 +44,13 @@ export const save = async (req: Request, res: Response) => {
     await telnetWrapper.write(`service password-encryption\r\n`);
     const userRole = roles.find((role) => role.id === req.body.role);
     await telnetWrapper.write(
-      `username ${req.body.firstName} password ${req.body.password} privilege ${userRole?.privilege}\r\n`
+      `username ${req.body.username} password ${req.body.password} privilege ${userRole?.privilege}\r\n`
     );
     await telnetWrapper.closeConnection();
   }
 
-  const user = User.build(req.body);
   await user.save();
-
-  res.status(201).json();
+  res.status(201).json(user);
 };
 
 export const update = async (req: CustomRequest<UserAttrs>, res: Response) => {
@@ -76,7 +73,7 @@ export const update = async (req: CustomRequest<UserAttrs>, res: Response) => {
       await telnetWrapper.write(`service password-encryption\r\n`);
       const userRole = roles.find((role) => role.id === req.body.role);
       await telnetWrapper.write(
-        `username ${req.body.firstName} password ${req.body.password} privilege ${userRole?.privilege}\r\n`
+        `username ${req.body.username} password ${req.body.password} privilege ${userRole?.privilege}\r\n`
       );
       await telnetWrapper.closeConnection();
     }
@@ -99,11 +96,15 @@ export const remove = async (req: CustomRequest<UserAttrs>, res: Response) => {
     await telnetWrapper.connect();
     await telnetWrapper.login();
     await telnetWrapper.write(`configure terminal\r\n`);
-    await telnetWrapper.write(`no username ${user.firstName}\r\n`);
+    await telnetWrapper.write(`no username ${user.username}\r\n`);
     await telnetWrapper.closeConnection();
   }
 
-  await user.remove();
+  user.set({
+    status: false,
+  });
+
+  await user.save();
 
   res.status(202).json();
 };

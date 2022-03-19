@@ -19,12 +19,13 @@ import { toast } from "react-toastify";
 import { UpdateUserForm, WithPermissions } from "..";
 import { useAuthContext } from "../../context/AuthContext";
 import { Actions, Resources } from "../../lib/helpers/constants";
-import { formatDate } from "../../lib/helpers/utils";
+import { formatDate, toastErrors } from "../../lib/helpers/utils";
 import { UserService } from "../../lib/services";
 
 export const TableUsersRow = (props) => {
   const {
     id,
+    username,
     createdAt,
     dni,
     email,
@@ -39,7 +40,7 @@ export const TableUsersRow = (props) => {
   const { currentUser } = useAuthContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const textColor = useColorModeValue("gray.700", "white");
-  const bgStatus = useColorModeValue("gray.400", "#1a202c");
+  const bgStatus = useColorModeValue("red.400", "#1a202c");
   const colorStatus = useColorModeValue("white", "gray.400");
 
   const removeUser = async () => {
@@ -48,9 +49,7 @@ export const TableUsersRow = (props) => {
       toast.success("Eliminado con éxito");
       mutate();
     } catch (error) {
-      for (const err of error.errors) {
-        toast.error(err.message);
-      }
+      toastErrors(error);
     }
   };
 
@@ -66,6 +65,9 @@ export const TableUsersRow = (props) => {
               minWidth="100%"
             >
               {firstName} {lastName}
+            </Text>
+            <Text fontSize="sm" color="green.400" fontWeight="normal">
+              {username}
             </Text>
             <Text fontSize="sm" color="gray.400" fontWeight="normal">
               {email}
@@ -93,7 +95,7 @@ export const TableUsersRow = (props) => {
           p="3px 10px"
           borderRadius="8px"
         >
-          {status ? "Activo" : "Inactivo"}
+          {status ? "Activo" : "Eliminado"}
         </Badge>
       </Td>
 
@@ -121,7 +123,7 @@ export const TableUsersRow = (props) => {
                 bg="transparent"
                 variant="no-hover"
                 onClick={removeUser}
-                disabled={id === currentUser.id}
+                disabled={id === currentUser.id || !status}
               >
                 <Text
                   fontSize="md"
@@ -140,6 +142,7 @@ export const TableUsersRow = (props) => {
                 bg="transparent"
                 variant="no-hover"
                 onClick={onOpen}
+                disabled={!status}
               >
                 <Text
                   fontSize="md"

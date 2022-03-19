@@ -1,15 +1,15 @@
-import React from "react";
 import {
   Box,
-  useColorModeValue,
   Drawer,
   DrawerContent,
+  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { dashboardItems } from "./items";
+import React from "react";
 import { MobileNav, SidebarContent } from "../components";
+import { dashboardItems } from "./items";
 
-const DashboardLayout = ({ children, currentUser }) => {
+const DashboardLayout = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (

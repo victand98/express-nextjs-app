@@ -1,13 +1,4 @@
 import {
-  Card,
-  CardBody,
-  CardHeader,
-  NewUserForm,
-  TableUsersRow,
-  WithPermissions,
-} from "../components";
-import { DashboardLayout } from "../layouts";
-import {
   Button,
   Modal,
   ModalBody,
@@ -24,6 +15,15 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { HiOutlineDocumentAdd } from "react-icons/hi";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  NewUserForm,
+  TableUsersRow,
+  WithPermissions,
+} from "../components";
+import { DashboardLayout } from "../layouts";
 import { useUsers } from "../lib/api/users";
 import { Actions, Resources } from "../lib/helpers/constants";
 

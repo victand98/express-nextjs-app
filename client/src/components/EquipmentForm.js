@@ -1,11 +1,12 @@
+import { Button, Stack } from "@chakra-ui/react";
 import React from "react";
-import { Stack, Button } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Input, Select } from ".";
+import { handleFormError } from "../lib/helpers/utils";
 import { EquipmentService } from "../lib/services";
 
-export const NewEquipmentForm = ({ users, onClose, mutate }) => {
+export const NewEquipmentForm = ({ users, onClose, mutate, nap }) => {
   const usersOptions = users.map((user) => ({
     value: user.id,
     label: `${user.firstName} ${user.lastName}`,
@@ -15,18 +16,18 @@ export const NewEquipmentForm = ({ users, onClose, mutate }) => {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
+    setError,
   } = useForm();
 
   const onSubmit = async (values) => {
     try {
+      values.nap = nap.id;
       const { data } = await EquipmentService.save(values);
       toast.success("Guardado con éxito");
       onClose();
       mutate();
     } catch (error) {
-      for (const err of error.errors) {
-        toast.error(err.message);
-      }
+      handleFormError(error, setError);
     }
   };
 

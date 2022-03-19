@@ -1,14 +1,15 @@
+import cookieSession from "cookie-session";
+import cors from "cors";
 import express from "express";
 import "express-async-errors";
 import morgan from "morgan";
 import path from "path";
-import cors from "cors";
-import cookieSession from "cookie-session";
-import routes from "./routes";
-import { ErrorHandler } from "./middlewares/error-handler";
-import { currentUser } from "./middlewares/current-user";
 import { NotFoundError } from "./helpers/errors/not-found.error";
 import log from "./helpers/logger";
+import { currentUser } from "./middlewares/current-user";
+import { ErrorHandler } from "./middlewares/error-handler";
+import { MongoErrorHandler } from "./middlewares/mongo-error-handler";
+import routes from "./routes";
 
 const app = express();
 
@@ -47,6 +48,7 @@ app.all("*", async (req, res) => {
   throw new NotFoundError();
 });
 
+app.use(MongoErrorHandler);
 app.use(ErrorHandler);
 
 export { app };

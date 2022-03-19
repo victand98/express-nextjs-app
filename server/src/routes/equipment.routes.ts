@@ -22,4 +22,11 @@ equipmentRouter.put(
   use(equipmentController.update)
 );
 
+equipmentRouter.delete(
+  "/:id",
+  requireAuth,
+  authorization(Resources.equipment),
+  use(equipmentController.remove)
+);
+
 export { equipmentRouter };

@@ -1,8 +1,7 @@
 import axios from "../helpers/axios";
 
 const AuthService = {
-  login: ({ email, password }) =>
-    axios.post("/auth/signin", { email, password }),
+  login: (data) => axios.post("/auth/signin", data),
   logout: () => axios.post("/auth/logout"),
 };
 

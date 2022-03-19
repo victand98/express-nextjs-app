@@ -1,11 +1,11 @@
-import React from "react";
+import { Button, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { Stack, Button } from "@chakra-ui/react";
+import React from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import { Input } from ".";
-import { AuthService } from "../lib/services";
 import { useAuthContext } from "../context/AuthContext";
+import { toastErrors } from "../lib/helpers/utils";
+import { AuthService } from "../lib/services";
 
 export const LoginForm = () => {
   const router = useRouter();
@@ -24,9 +24,7 @@ export const LoginForm = () => {
       const returnUrl = router.query.returnUrl || "/";
       router.push(returnUrl);
     } catch (error) {
-      for (const err of error.errors) {
-        toast.error(err.message);
-      }
+      toastErrors(error);
     }
   };
 
@@ -34,19 +32,14 @@ export const LoginForm = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={4}>
         <Input
-          type="email"
-          name="email"
+          type="text"
+          name="username"
           bg={"blue.10"}
           placeholder="usuario@correo.com"
           label="Correo Electrónico"
           errors={errors}
           register={register}
           rules={{
-            pattern: {
-              value:
-                /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
-              message: "El correo no es válido",
-            },
             required: "El campo es requerido",
           }}
         />

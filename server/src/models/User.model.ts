@@ -3,6 +3,7 @@ import { Password } from "../helpers/Password";
 import { RoleDoc } from "./Role.model";
 
 interface UserAttrs {
+  username: string;
   firstName: string;
   lastName: string;
   dni: string;
@@ -17,6 +18,7 @@ interface UserModel extends mongoose.Model<UserDoc> {
 }
 
 interface UserDoc extends mongoose.Document {
+  username: string;
   firstName: string;
   lastName: string;
   dni: string;
@@ -30,6 +32,7 @@ interface UserDoc extends mongoose.Document {
 
 const UserSchema = new mongoose.Schema(
   {
+    username: { type: String, required: true, unique: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     dni: { type: String, required: true },

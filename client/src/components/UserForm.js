@@ -1,10 +1,11 @@
+import { Button, Stack } from "@chakra-ui/react";
 import React from "react";
-import { Stack, Button } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Input, Select, Switch } from ".";
-import { UserService } from "../lib/services";
 import { useAuthContext } from "../context/AuthContext";
+import { handleFormError } from "../lib/helpers/utils";
+import { UserService } from "../lib/services";
 
 export const NewUserForm = ({ roles, onClose, mutate }) => {
   const rolesOptions = roles.map((role) => ({
@@ -16,6 +17,7 @@ export const NewUserForm = ({ roles, onClose, mutate }) => {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
+    setError,
   } = useForm();
 
   const onSubmit = async (values) => {
@@ -25,15 +27,34 @@ export const NewUserForm = ({ roles, onClose, mutate }) => {
       onClose();
       mutate();
     } catch (error) {
-      for (const err of error.errors) {
-        toast.error(err.message);
-      }
+      handleFormError(error, setError);
     }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={4}>
+        <Input
+          type="text"
+          name="username"
+          placeholder="usuario123"
+          label="Nombre de usuario"
+          errors={errors}
+          register={register}
+          rules={{
+            required: "El campo es requerido",
+            minLength: { value: 3, message: "Escriba al menos 3 caracteres" },
+            maxLength: {
+              value: 16,
+              message: "Escriba no más de 16 caracteres",
+            },
+            pattern: {
+              value: /^[a-zA-Z]+$/,
+              message: "El nombre de usuario no es válido",
+            },
+          }}
+        />
+
         <Input
           type="text"
           name="firstName"
@@ -44,10 +65,6 @@ export const NewUserForm = ({ roles, onClose, mutate }) => {
           rules={{
             required: "El campo es requerido",
             minLength: { value: 3, message: "Escriba al menos 3 caracteres" },
-            maxLength: {
-              value: 16,
-              message: "Escriba no más de 16 caracteres",
-            },
           }}
         />
 
@@ -139,7 +156,7 @@ export const NewUserForm = ({ roles, onClose, mutate }) => {
 
 export const UpdateUserForm = ({ user, roles, onClose, mutate }) => {
   const { currentUser } = useAuthContext();
-  const { dni, email, firstName, id, lastName, role, status } = user;
+  const { dni, email, username, firstName, id, lastName, role, status } = user;
 
   const rolesOptions = roles.map((role) => ({
     value: role.id,
@@ -150,6 +167,7 @@ export const UpdateUserForm = ({ user, roles, onClose, mutate }) => {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
+    setError,
   } = useForm();
 
   const onSubmit = async (values) => {
@@ -159,9 +177,7 @@ export const UpdateUserForm = ({ user, roles, onClose, mutate }) => {
       onClose();
       mutate();
     } catch (error) {
-      for (const err of error.errors) {
-        toast.error(err.message);
-      }
+      handleFormError(error, setError);
     }
   };
 
@@ -174,6 +190,18 @@ export const UpdateUserForm = ({ user, roles, onClose, mutate }) => {
           defaultChecked={status}
           errors={errors}
           register={register}
+          isDisabled
+        />
+
+        <Input
+          type="text"
+          name="username"
+          placeholder="usuario123"
+          label="Nombre de usuario"
+          errors={errors}
+          defaultValue={username}
+          isDisabled
+          register={register}
         />
 
         <Input
@@ -184,14 +212,9 @@ export const UpdateUserForm = ({ user, roles, onClose, mutate }) => {
           label="Nombre"
           errors={errors}
           register={register}
-          readOnly
           rules={{
             required: "El campo es requerido",
             minLength: { value: 3, message: "Escriba al menos 3 caracteres" },
-            maxLength: {
-              value: 16,
-              message: "Escriba no más de 16 caracteres",
-            },
           }}
         />
 

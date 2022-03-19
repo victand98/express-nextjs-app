@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, useColorModeValue } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text, useColorModeValue } from "@chakra-ui/react";
 
 export const Card = (props) => (
   <Box
@@ -11,7 +11,7 @@ export const Card = (props) => (
 );
 
 export const CardHeader = (props) => {
-  const { title, action } = props;
+  const { title, action, subtitle } = props;
   return (
     <Flex
       align="center"
@@ -20,7 +20,14 @@ export const CardHeader = (props) => {
       py="4"
       borderBottomWidth="1px"
     >
-      <Heading fontSize="lg">{title}</Heading>
+      <div>
+        <Heading fontSize="lg">{title}</Heading>
+        {subtitle && (
+          <Text fontSize="sm" color="gray">
+            {subtitle}
+          </Text>
+        )}
+      </div>
       {action}
     </Flex>
   );

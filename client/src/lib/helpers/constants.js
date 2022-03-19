@@ -4,6 +4,7 @@ export const Resources = {
   users: "usuarios",
   equipment: "equipos",
   backup: "respaldo",
+  nap: "nap",
 };
 
 export const Actions = {
