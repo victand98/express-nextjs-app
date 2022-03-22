@@ -25,7 +25,7 @@ export const save = async (
   const equipment = Equipment.build(req.body);
   await equipmentTelnet.registerONU(
     equipment.number,
-    equipment.type,
+    equipment.model,
     equipment.serial
   );
   await equipmentTelnet.setPlan(

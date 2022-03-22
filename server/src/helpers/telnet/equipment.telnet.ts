@@ -1,12 +1,12 @@
 import { telnetWrapper } from "../../config/telnet";
 import { Plans } from "../types";
 
-const registerONU = async (number: number, type: string, serial: string) => {
+const registerONU = async (number: number, model: string, serial: string) => {
   await telnetWrapper.connect();
   await telnetWrapper.login();
   await telnetWrapper.write(`configure terminal\r\n`);
   await telnetWrapper.write(`interface gpon-olt_1/1/1\r\n`);
-  await telnetWrapper.write(`onu ${number} type ${type} sn ${serial}\r\n`);
+  await telnetWrapper.write(`onu ${number} type ${model} sn ${serial}\r\n`);
   await telnetWrapper.write(`exit\r\n`);
 };
 
