@@ -14,6 +14,12 @@ export enum Resources {
   nap = "nap",
 }
 
+export enum Plans {
+  plan10M = "10M",
+  plan15M = "15M",
+  plan20M = "20M",
+}
+
 export interface CustomRequest<T> extends Request {
   body: T;
 }

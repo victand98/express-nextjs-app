@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { NotFoundError } from "../helpers/errors/not-found.error";
+import { equipmentTelnet } from "../helpers/telnet/equipment.telnet";
 import { CustomRequest } from "../helpers/types";
 import { Equipment, EquipmentAttrs } from "../models";
 
@@ -22,6 +23,22 @@ export const save = async (
   res: Response
 ) => {
   const equipment = Equipment.build(req.body);
+  await equipmentTelnet.registerONU(
+    equipment.number,
+    equipment.type,
+    equipment.serial
+  );
+  await equipmentTelnet.setPlan(
+    equipment.number,
+    equipment.plan,
+    equipment.vlan
+  );
+  await equipmentTelnet.addService(
+    equipment.number,
+    equipment.vlan,
+    equipment.ip
+  );
+
   await equipment.save();
 
   res.status(201).json(equipment);
@@ -46,6 +63,7 @@ export const remove = async (req: Request, res: Response) => {
 
   if (!equipment) throw new NotFoundError();
 
+  await equipmentTelnet.removeEquipment(equipment.number);
   equipment.set({
     status: false,
   });

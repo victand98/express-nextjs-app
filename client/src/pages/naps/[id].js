@@ -90,10 +90,13 @@ const Equipments = ({ napData, users }) => {
           <Thead>
             <Tr my=".8rem" pl="0px" color="gray.400">
               <Th pl="0px" color="gray.400">
+                N°
+              </Th>
+              <Th pl="0px" color="gray.400">
                 Equipo
               </Th>
               <Th color="gray.400">Estado</Th>
-              <Th color="gray.400">Ubicación</Th>
+              <Th color="gray.400">Detalles</Th>
               <Th color="gray.400">Usuario</Th>
               <Th color="gray.400">Historial</Th>
               <Th></Th>

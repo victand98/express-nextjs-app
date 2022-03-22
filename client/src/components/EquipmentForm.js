@@ -3,8 +3,10 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Input, Select } from ".";
+import { PlanOptions } from "../lib/helpers/constants";
 import { handleFormError } from "../lib/helpers/utils";
 import { EquipmentService } from "../lib/services";
+import { NumberInput } from "./Input";
 
 export const NewEquipmentForm = ({ users, onClose, mutate, nap }) => {
   const usersOptions = users.map((user) => ({
@@ -34,6 +36,20 @@ export const NewEquipmentForm = ({ users, onClose, mutate, nap }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={4}>
+        <NumberInput
+          step={1}
+          min={1}
+          precision={0}
+          name="number"
+          label="Número"
+          errors={errors}
+          register={register}
+          rules={{
+            required: "El campo es requerido",
+            min: { value: 1, message: "El valor mínimo es 1" },
+          }}
+        />
+
         <Input
           type="text"
           name="brand"
@@ -112,16 +128,15 @@ export const NewEquipmentForm = ({ users, onClose, mutate, nap }) => {
           }}
         />
 
-        <Input
-          type="text"
-          name="location"
-          placeholder="Edificio 12"
-          label="Ubicación"
+        <Select
+          placeholder="Seleccione un Plan"
+          name="plan"
+          label="Plan"
           errors={errors}
           register={register}
+          options={PlanOptions}
           rules={{
             required: "El campo es requerido",
-            minLength: { value: 3, message: "Escriba al menos 3 caracteres" },
           }}
         />
 
@@ -156,7 +171,7 @@ export const NewEquipmentForm = ({ users, onClose, mutate, nap }) => {
 };
 
 export const UpdateEquipmentForm = ({ equipment, users, onClose, mutate }) => {
-  const { brand, model, type, serial, vlan, ip, location, user, id } =
+  const { brand, model, type, serial, vlan, ip, number, plan, user, id } =
     equipment;
 
   const usersOptions = users.map((user) => ({
@@ -186,12 +201,29 @@ export const UpdateEquipmentForm = ({ equipment, users, onClose, mutate }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={4}>
+        <NumberInput
+          step={1}
+          min={1}
+          precision={0}
+          name="number"
+          label="Número"
+          errors={errors}
+          register={register}
+          defaultValue={number}
+          readOnly
+          rules={{
+            required: "El campo es requerido",
+            min: { value: 1, message: "El valor mínimo es 1" },
+          }}
+        />
+
         <Input
           type="text"
           name="brand"
           placeholder="Marca A"
           label="Marca"
           defaultValue={brand}
+          readOnly
           errors={errors}
           register={register}
           rules={{
@@ -205,6 +237,7 @@ export const UpdateEquipmentForm = ({ equipment, users, onClose, mutate }) => {
           placeholder="Modelo 123"
           label="Modelo"
           defaultValue={model}
+          readOnly
           errors={errors}
           register={register}
           rules={{
@@ -218,6 +251,7 @@ export const UpdateEquipmentForm = ({ equipment, users, onClose, mutate }) => {
           placeholder="Tipo M"
           label="Tipo"
           defaultValue={type}
+          readOnly
           errors={errors}
           register={register}
           rules={{
@@ -231,6 +265,7 @@ export const UpdateEquipmentForm = ({ equipment, users, onClose, mutate }) => {
           placeholder="XX-XXX-XXXX"
           label="Serial"
           defaultValue={serial}
+          readOnly
           errors={errors}
           register={register}
           rules={{
@@ -244,6 +279,7 @@ export const UpdateEquipmentForm = ({ equipment, users, onClose, mutate }) => {
           placeholder=".1.1"
           label="VLAN"
           defaultValue={vlan}
+          readOnly
           errors={errors}
           register={register}
           rules={{
@@ -257,6 +293,7 @@ export const UpdateEquipmentForm = ({ equipment, users, onClose, mutate }) => {
           placeholder=".1.1"
           label="IP"
           defaultValue={ip}
+          readOnly
           errors={errors}
           register={register}
           rules={{
@@ -264,19 +301,18 @@ export const UpdateEquipmentForm = ({ equipment, users, onClose, mutate }) => {
             minLength: { value: 3, message: "Escriba al menos 3 caracteres" },
           }}
         />
-        <Input
-          type="text"
-          name="location"
-          placeholder="Edificio 12"
-          label="Ubicación"
-          defaultValue={location}
+
+        <Select
+          placeholder="Seleccione un Plan"
+          name="plan"
+          label="Plan"
           errors={errors}
           register={register}
-          rules={{
-            required: "El campo es requerido",
-            minLength: { value: 3, message: "Escriba al menos 3 caracteres" },
-          }}
+          options={PlanOptions}
+          defaultValue={plan}
+          isDisabled
         />
+
         <Select
           placeholder="Seleccione un Usuario"
           name="user"

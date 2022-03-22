@@ -30,7 +30,8 @@ export const TableEquipmentsRow = (props) => {
     serial,
     vlan,
     ip,
-    location,
+    number,
+    plan,
     user,
     status,
     createdAt,
@@ -55,6 +56,11 @@ export const TableEquipmentsRow = (props) => {
 
   return (
     <Tr>
+      <Td pl="0px">
+        <Text fontSize="2xl" color="gray.400" fontWeight="normal">
+          {number}
+        </Text>
+      </Td>
       <Td minWidth={{ sm: "150px" }} pl="0px">
         <Flex align="center" py=".8rem" minWidth="100%" flexWrap="nowrap">
           <Flex direction="column">
@@ -97,7 +103,7 @@ export const TableEquipmentsRow = (props) => {
             IP: {ip}
           </Text>
           <Text fontSize="sm" color="gray.400" fontWeight="normal">
-            {location}
+            Plan <strong>{plan}</strong>
           </Text>
         </Flex>
       </Td>

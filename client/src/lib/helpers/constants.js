@@ -13,3 +13,18 @@ export const Actions = {
   create: "create",
   delete: "delete",
 };
+
+export const PlanOptions = [
+  {
+    value: "10M",
+    label: "10 Mb",
+  },
+  {
+    value: "15M",
+    label: "15 Mb",
+  },
+  {
+    value: "20M",
+    label: "20 Mb",
+  },
+];
