@@ -1,21 +1,20 @@
 import {
-  IconButton,
   Avatar,
   Box,
   CloseButton,
   Flex,
   HStack,
-  VStack,
   Icon,
-  useColorModeValue,
-  Text,
+  IconButton,
   Menu,
   MenuButton,
-  MenuDivider,
   MenuItem,
   MenuList,
+  Text,
+  useColorModeValue,
+  VStack,
 } from "@chakra-ui/react";
-import { FiMenu, FiBell, FiChevronDown } from "react-icons/fi";
+import { FiChevronDown, FiMenu } from "react-icons/fi";
 import { canRenderItem, Link } from ".";
 import { useAuthContext } from "../context/AuthContext";
 
@@ -146,7 +145,7 @@ export const MobileNav = ({ onOpen, ...rest }) => {
                   spacing="1px"
                   ml="2"
                 >
-                  <Text fontSize="sm">Usuario</Text>
+                  <Text fontSize="sm">{currentUser?.username}</Text>
                   <Text fontSize="xs" color="gray.600">
                     {currentUser?.roleName}
                   </Text>
@@ -160,7 +159,6 @@ export const MobileNav = ({ onOpen, ...rest }) => {
               bg={useColorModeValue("white", "gray.900")}
               borderColor={useColorModeValue("gray.200", "gray.700")}
             >
-              <MenuDivider />
               <Link href="/salir">
                 <MenuItem>Salir</MenuItem>
               </Link>

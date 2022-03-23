@@ -223,7 +223,6 @@ export const UpdateEquipmentForm = ({ equipment, users, onClose, mutate }) => {
           placeholder="Marca A"
           label="Marca"
           defaultValue={brand}
-          readOnly
           errors={errors}
           register={register}
           rules={{
@@ -251,7 +250,6 @@ export const UpdateEquipmentForm = ({ equipment, users, onClose, mutate }) => {
           placeholder="Tipo M"
           label="Tipo"
           defaultValue={type}
-          readOnly
           errors={errors}
           register={register}
           rules={{

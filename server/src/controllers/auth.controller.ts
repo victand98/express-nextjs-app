@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { Password } from "../helpers/Password";
-import { Resource, Role, User } from "../models";
 import jwt from "jsonwebtoken";
 import { BadRequestError } from "../helpers/errors/bad-request-error";
+import { Password } from "../helpers/Password";
 import { Roles } from "../helpers/types";
+import { Resource, Role, User } from "../models";
 
 export const signin = async (req: Request, res: Response) => {
   const { password, username } = req.body;
@@ -29,6 +29,7 @@ export const signin = async (req: Request, res: Response) => {
       email: user.email,
       role: user.role.id,
       roleName: user.role.name,
+      username: user.username,
     },
     process.env.JWT_KEY!
   );
